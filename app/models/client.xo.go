@@ -147,14 +147,14 @@ func (c *Client) Delete(db XODB) error {
 // SalesPerson returns the SalesPerson associated with the Client's SalesPersonID (sales_person_id).
 //
 // Generated from foreign key 'client_ibfk_1'.
-func (c *Client) SalesPerson(db XODB) (*SalesPerson, error) {
-	return SalesPersonByID(db, uint(c.SalesPersonID.Int64))
-}
+// func (c *Client) SalesPerson(db XODB) (*SalesPerson, error) {
+// 	return SalesPersonByID(db, uint(c.SalesPersonID.Int64))
+// }
 
 // ClientByID retrieves a row from 'ccdb_dupl.client' as a Client.
 //
 // Generated from index 'client__id_pkey'.
-func ClientByID(db XODB, id uint) (*Client, error) {
+func (c Client) ByID(db XODB, id uint) (interface{}, error) {
 	var err error
 
 	// sql query
@@ -165,7 +165,7 @@ func ClientByID(db XODB, id uint) (*Client, error) {
 
 	// run query
 	XOLog(sqlstr, id)
-	c := Client{
+	c = Client{
 		_exists: true,
 	}
 
@@ -216,7 +216,7 @@ func ClientsBySalesPersonID(db XODB, salesPersonID sql.NullInt64) ([]*Client, er
 	return res, nil
 }
 
-func Clients(db XODB) ([]*Client, error) {
+func (c Client) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query

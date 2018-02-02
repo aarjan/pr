@@ -132,7 +132,7 @@ func (p *Partner) Delete(db XODB) error {
 // PartnerByID retrieves a row from 'ccdb_dupl.partner' as a Partner.
 //
 // Generated from index 'partner__id_pkey'.
-func PartnerByID(db XODB, id uint) (*Partner, error) {
+func (p Partner) ByID(db XODB, id uint) (interface{}, error) {
 	var err error
 
 	// sql query
@@ -143,7 +143,7 @@ func PartnerByID(db XODB, id uint) (*Partner, error) {
 
 	// run query
 	XOLog(sqlstr, id)
-	p := Partner{
+	p = Partner{
 		_exists: true,
 	}
 
@@ -155,7 +155,7 @@ func PartnerByID(db XODB, id uint) (*Partner, error) {
 	return &p, nil
 }
 
-func Partners(db XODB) ([]*Partner, error) {
+func (p Partner) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query

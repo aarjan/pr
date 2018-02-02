@@ -1,98 +1,86 @@
 package controller
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
 
 	"github.com/ccdb-api/app/models"
 	"github.com/ccdb-api/app/service"
 )
 
 type Response struct {
-	Data  interface{} `json:"data"`
-	Error string      `json:"error"`
+	Data    interface{} `json:"data"`
+	Message string      `json:"message"`
 }
 
 func Clients(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	clients, err := models.Clients(app.DB)
-	if err != nil {
-		data := Response{
-			Data:  nil,
-			Error: err.Error(),
-		}
-		encode(w, data)
-		return err
-	}
-	data := Response{
-		Data:  clients,
-		Error: "",
-	}
-	encode(w, data)
-	return nil
+	cl := models.Client{}
+	return allData(cl, w, r, app)
 }
 
 func Subscriptions(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := models.Subscription{}
-	return handling(s, w, r, app)
+	return allData(s, w, r, app)
 }
 
-func handling(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	subscriptions, err := model.All(app.DB)
-	if err != nil {
-		data := Response{
-			Data:  nil,
-			Error: err.Error(),
-		}
-		encode(w, data)
-		return err
-	}
-	data := Response{
-		Data:  subscriptions,
-		Error: "",
-	}
-	encode(w, data)
-	return nil
+func Payments(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := models.Payment{}
+	return allData(s, w, r, app)
 }
 
-func encode(w http.ResponseWriter, res Response) {
-	if er := json.NewEncoder(w).Encode(res); er != nil {
-		log.Println(er)
-	}
+func Partners(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := models.Partner{}
+	return allData(s, w, r, app)
 }
 
-func Client(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	val := mux.Vars(r)["id"]
-	id, _ := strconv.Atoi(val)
-	client, err := models.ClientByID(app.DB, uint(id))
-	if err != nil {
-		data := Response{
-			Data:  nil,
-			Error: err.Error(),
-		}
-		encode(w, data)
-		return err
-	}
-	sp, err := client.SalesPerson(app.DB)
-	if err != nil {
-		data := Response{
-			Data:  nil,
-			Error: err.Error(),
-		}
-		encode(w, data)
-		return err
-	}
+func Packages(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := models.Package{}
+	return allData(s, w, r, app)
+}
 
-	data := Response{
-		Data: struct {
-			*models.Client
-			*models.SalesPerson
-		}{client, sp},
-		Error: "",
-	}
-	encode(w, data)
-	return nil
+func SalesPersons(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := models.SalesPerson{}
+	return allData(s, w, r, app)
+}
+
+// func Client(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+// 	val := mux.Vars(r)["id"]
+// 	id, _ := strconv.Atoi(val)
+// 	cl := models.Client{}
+// 	client, err := cl.ByID(app.DB, uint(id))
+// 	if err != nil {
+// 		data := Response{nil, err.Error()}
+// 		encode(w, data)
+// 		return err
+// 	}
+// 	sp, err := client.(models.Client).SalesPerson(app.DB)
+// 	if err != nil {
+// 		data := Response{nil, err.Error()}
+// 		encode(w, data)
+// 		return err
+// 	}
+
+// 	data := Response{
+// 		Data: struct {
+// 			Client      *models.Client      `json:"client"`
+// 			SalesPerson *models.SalesPerson `json:"sales_person"`
+// 		}{client, sp},
+// 		Message: "success",
+// 	}
+// 	encode(w, data)
+// 	return nil
+// }
+
+func SalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := models.SalesPerson{}
+	return byID(s, w, r, app)
+}
+
+func Package(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := models.Package{}
+	return byID(s, w, r, app)
+}
+
+func Partner(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := models.Partner{}
+	return byID(s, w, r, app)
 }

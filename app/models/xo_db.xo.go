@@ -13,6 +13,11 @@ import (
 	"strings"
 )
 
+type Modeler interface {
+	All(db XODB) (interface{}, error)
+	ByID(db XODB, id uint) (interface{}, error)
+}
+
 // XODB is the common interface for database operations that can be used with
 // types from schema 'ccdb_dupl'.
 //

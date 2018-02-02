@@ -166,23 +166,23 @@ func (s *Subscription) Delete(db XODB) error {
 // Client returns the Client associated with the Subscription's ClientID (client_id).
 //
 // Generated from foreign key 'subscription_ibfk_1'.
-func (s *Subscription) Client(db XODB) (*Client, error) {
-	return ClientByID(db, uint(s.ClientID.Int64))
-}
+// func (s *Subscription) Client(db XODB) (*Client, error) {
+// 	return ClientByID(db, uint(s.ClientID.Int64))
+// }
 
 // Package returns the Package associated with the Subscription's PackageID (package_id).
 //
 // Generated from foreign key 'subscription_ibfk_2'.
-func (s *Subscription) Package(db XODB) (*Package, error) {
-	return PackageByID(db, s.PackageID)
-}
+// func (s *Subscription) Package(db XODB) (*Package, error) {
+// 	return PackageByID(db, s.PackageID)
+// }
 
 // Partner returns the Partner associated with the Subscription's PartnerID (partner_id).
 //
 // Generated from foreign key 'subscription_ibfk_3'.
-func (s *Subscription) Partner(db XODB) (*Partner, error) {
-	return PartnerByID(db, uint(s.PartnerID.Int64))
-}
+// func (s *Subscription) Partner(db XODB) (*Partner, error) {
+// 	return PartnerByID(db, uint(s.PartnerID.Int64))
+// }
 
 // SubscriptionsByClientID retrieves a row from 'ccdb_dupl.subscription' as a Subscription.
 //
@@ -327,11 +327,7 @@ func SubscriptionsByPartnerID(db XODB, partnerID sql.NullInt64) ([]*Subscription
 	return res, nil
 }
 
-type Modeler interface {
-	All(db XODB) (interface{}, error)
-}
-
-func (s *Subscription) All(db XODB) (interface{}, error) {
+func (s Subscription) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query
@@ -364,4 +360,7 @@ func (s *Subscription) All(db XODB) (interface{}, error) {
 	}
 
 	return res, nil
+}
+func (s Subscription) ByID(db XODB, id uint) (interface{}, error) {
+	return nil, nil
 }

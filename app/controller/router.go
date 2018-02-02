@@ -15,5 +15,14 @@ func Handler(app *service.AppServer) *mux.Router {
 	})
 
 	m.Handle("/clients", AppHandler{app, Clients})
+	m.Handle("/subscriptions", AppHandler{app, Subscriptions})
+	m.Handle("/payments", AppHandler{app, Payments})
+	m.Handle("/salespersons", AppHandler{app, SalesPersons})
+	m.Handle("/packages", AppHandler{app, Packages})
+	m.Handle("/partners", AppHandler{app, Partners})
+
+	m.Handle("/partner/{id}", AppHandler{app, Partner})
+	m.Handle("/package/{id}", AppHandler{app, Package})
+	m.Handle("/salesperson/{id}", AppHandler{app, SalesPerson})
 	return m
 }

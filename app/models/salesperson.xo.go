@@ -132,7 +132,7 @@ func (sp *SalesPerson) Delete(db XODB) error {
 // SalesPersonByID retrieves a row from 'ccdb_dupl.sales_person' as a SalesPerson.
 //
 // Generated from index 'sales_person__id_pkey'.
-func SalesPersonByID(db XODB, id uint) (*SalesPerson, error) {
+func (s SalesPerson) ByID(db XODB, id uint) (interface{}, error) {
 	var err error
 
 	// sql query
@@ -155,7 +155,7 @@ func SalesPersonByID(db XODB, id uint) (*SalesPerson, error) {
 	return &sp, nil
 }
 
-func SalesPersons(db XODB) ([]*SalesPerson, error) {
+func (sp SalesPerson) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query

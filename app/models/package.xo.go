@@ -135,7 +135,7 @@ func (p *Package) Delete(db XODB) error {
 // PackageByID retrieves a row from 'ccdb_dupl.package' as a Package.
 //
 // Generated from index 'package__id_pkey'.
-func PackageByID(db XODB, id uint) (*Package, error) {
+func (p Package) ByID(db XODB, id uint) (interface{}, error) {
 	var err error
 
 	// sql query
@@ -146,7 +146,7 @@ func PackageByID(db XODB, id uint) (*Package, error) {
 
 	// run query
 	XOLog(sqlstr, id)
-	p := Package{
+	p = Package{
 		_exists: true,
 	}
 
@@ -158,7 +158,7 @@ func PackageByID(db XODB, id uint) (*Package, error) {
 	return &p, nil
 }
 
-func Packages(db XODB) ([]*Package, error) {
+func (p Package) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query

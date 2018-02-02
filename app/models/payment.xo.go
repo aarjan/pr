@@ -154,7 +154,7 @@ func (p *Payment) Subscription(db XODB) (*Subscription, error) {
 // PaymentByID retrieves a row from 'ccdb_dupl.payment' as a Payment.
 //
 // Generated from index 'payment__id_pkey'.
-func PaymentByID(db XODB, id uint) (*Payment, error) {
+func (s Payment) ByID(db XODB, id uint) (interface{}, error) {
 	var err error
 
 	// sql query
@@ -216,7 +216,7 @@ func PaymentsBySubscriptionID(db XODB, subscriptionID sql.NullInt64) ([]*Payment
 	return res, nil
 }
 
-func Payments(db XODB) ([]*Payment, error) {
+func (p Payment) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query
