@@ -15,7 +15,7 @@ import (
 
 type Modeler interface {
 	All(db XODB) (interface{}, error)
-	ByID(db XODB, id uint) (interface{}, error)
+	ByID(db XODB, id uint) error
 }
 
 // XODB is the common interface for database operations that can be used with

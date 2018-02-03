@@ -21,6 +21,9 @@ func Handler(app *service.AppServer) *mux.Router {
 	m.Handle("/packages", AppHandler{app, Packages})
 	m.Handle("/partners", AppHandler{app, Partners})
 
+	m.Handle("/client/{id}", AppHandler{app, Client})
+	m.Handle("/subscription/{id}", AppHandler{app, Subscription})
+	m.Handle("/payment/{id}", AppHandler{app, Payment})
 	m.Handle("/partner/{id}", AppHandler{app, Partner})
 	m.Handle("/package/{id}", AppHandler{app, Package})
 	m.Handle("/salesperson/{id}", AppHandler{app, SalesPerson})

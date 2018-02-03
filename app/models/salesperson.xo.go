@@ -132,9 +132,7 @@ func (sp *SalesPerson) Delete(db XODB) error {
 // SalesPersonByID retrieves a row from 'ccdb_dupl.sales_person' as a SalesPerson.
 //
 // Generated from index 'sales_person__id_pkey'.
-func (s SalesPerson) ByID(db XODB, id uint) (interface{}, error) {
-	var err error
-
+func (sp *SalesPerson) ByID(db XODB, id uint) error {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`_id, name, team, designation ` +
@@ -143,19 +141,12 @@ func (s SalesPerson) ByID(db XODB, id uint) (interface{}, error) {
 
 	// run query
 	XOLog(sqlstr, id)
-	sp := SalesPerson{
-		_exists: true,
-	}
+	sp._exists = true
 
-	err = db.QueryRow(sqlstr, id).Scan(&sp.ID, &sp.Name, &sp.Team, &sp.Designation)
-	if err != nil {
-		return nil, err
-	}
-
-	return &sp, nil
+	return db.QueryRow(sqlstr, id).Scan(&sp.ID, &sp.Name, &sp.Team, &sp.Designation)
 }
 
-func (sp SalesPerson) All(db XODB) (interface{}, error) {
+func (sp *SalesPerson) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query

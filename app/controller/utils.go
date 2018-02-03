@@ -25,7 +25,7 @@ func allData(model models.Modeler, w http.ResponseWriter, r *http.Request, app *
 func byID(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(val)
-	values, err := model.ByID(app.DB, uint(id))
+	err := model.ByID(app.DB, uint(id))
 	if err != nil {
 		data := Response{nil, err.Error()}
 		encode(w, data)
@@ -33,7 +33,7 @@ func byID(model models.Modeler, w http.ResponseWriter, r *http.Request, app *ser
 	}
 
 	data := Response{
-		Data:    values,
+		Data:    model,
 		Message: "success",
 	}
 	encode(w, data)

@@ -147,16 +147,16 @@ func (c *Client) Delete(db XODB) error {
 // SalesPerson returns the SalesPerson associated with the Client's SalesPersonID (sales_person_id).
 //
 // Generated from foreign key 'client_ibfk_1'.
-// func (c *Client) SalesPerson(db XODB) (*SalesPerson, error) {
-// 	return SalesPersonByID(db, uint(c.SalesPersonID.Int64))
-// }
+func (c *Client) SalesPerson(db XODB) (*SalesPerson, error) {
+	sp := &SalesPerson{}
+	err := sp.ByID(db, uint(c.SalesPersonID.Int64))
+	return sp, err
+}
 
 // ClientByID retrieves a row from 'ccdb_dupl.client' as a Client.
 //
 // Generated from index 'client__id_pkey'.
-func (c Client) ByID(db XODB, id uint) (interface{}, error) {
-	var err error
-
+func (c *Client) ByID(db XODB, id uint) error {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`_id, app_uuid, name, type, legal_entity_booking, number_of_employees, business_since, segment, lead_source, reason_for_allocation_to_sales, responsible_RM, acquisition_date, acquisition_cohort, client_churn_date, timestamp, sales_person_id ` +
@@ -165,16 +165,9 @@ func (c Client) ByID(db XODB, id uint) (interface{}, error) {
 
 	// run query
 	XOLog(sqlstr, id)
-	c = Client{
-		_exists: true,
-	}
+	c._exists = true
 
-	err = db.QueryRow(sqlstr, id).Scan(&c.ID, &c.AppUUID, &c.Name, &c.Type, &c.LegalEntityBooking, &c.NumberOfEmployees, &c.BusinessSince, &c.Segment, &c.LeadSource, &c.ReasonForAllocationToSales, &c.ResponsibleRm, &c.AcquisitionDate, &c.AcquisitionCohort, &c.ClientChurnDate, &c.Timestamp, &c.SalesPersonID)
-	if err != nil {
-		return nil, err
-	}
-
-	return &c, nil
+	return db.QueryRow(sqlstr, id).Scan(&c.ID, &c.AppUUID, &c.Name, &c.Type, &c.LegalEntityBooking, &c.NumberOfEmployees, &c.BusinessSince, &c.Segment, &c.LeadSource, &c.ReasonForAllocationToSales, &c.ResponsibleRm, &c.AcquisitionDate, &c.AcquisitionCohort, &c.ClientChurnDate, &c.Timestamp, &c.SalesPersonID)
 }
 
 // ClientsBySalesPersonID retrieves a row from 'ccdb_dupl.client' as a Client.
@@ -216,7 +209,7 @@ func ClientsBySalesPersonID(db XODB, salesPersonID sql.NullInt64) ([]*Client, er
 	return res, nil
 }
 
-func (c Client) All(db XODB) (interface{}, error) {
+func (c *Client) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query

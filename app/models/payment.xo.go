@@ -148,15 +148,15 @@ func (p *Payment) Delete(db XODB) error {
 //
 // Generated from foreign key 'payment_ibfk_1'.
 func (p *Payment) Subscription(db XODB) (*Subscription, error) {
-	return SubscriptionByID(db, uint(p.SubscriptionID.Int64))
+	s := &Subscription{}
+	err := s.ByID(db, uint(p.SubscriptionID.Int64))
+	return s, err
 }
 
 // PaymentByID retrieves a row from 'ccdb_dupl.payment' as a Payment.
 //
 // Generated from index 'payment__id_pkey'.
-func (s Payment) ByID(db XODB, id uint) (interface{}, error) {
-	var err error
-
+func (p *Payment) ByID(db XODB, id uint) error {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`_id, subscription_id, transaction_date, nature_of_transaction, contract_status, cash_recieved, currency, fx_rate_to_HKD, cash_recieved_HKD, payment_mode, first_month_of_accural, months_of_accural, last_month_of_accural, monthly_revenue_allocation, cash_received_for_payments_to_third_parties, type_of_third_parties, name_of_third_party ` +
@@ -165,16 +165,9 @@ func (s Payment) ByID(db XODB, id uint) (interface{}, error) {
 
 	// run query
 	XOLog(sqlstr, id)
-	p := Payment{
-		_exists: true,
-	}
+	p._exists = true
 
-	err = db.QueryRow(sqlstr, id).Scan(&p.ID, &p.SubscriptionID, &p.TransactionDate, &p.NatureOfTransaction, &p.ContractStatus, &p.CashRecieved, &p.Currency, &p.FxRateToHkd, &p.CashRecievedHkd, &p.PaymentMode, &p.FirstMonthOfAccural, &p.MonthsOfAccural, &p.LastMonthOfAccural, &p.MonthlyRevenueAllocation, &p.CashReceivedForPaymentsToThirdParties, &p.TypeOfThirdParties, &p.NameOfThirdParty)
-	if err != nil {
-		return nil, err
-	}
-
-	return &p, nil
+	return db.QueryRow(sqlstr, id).Scan(&p.ID, &p.SubscriptionID, &p.TransactionDate, &p.NatureOfTransaction, &p.ContractStatus, &p.CashRecieved, &p.Currency, &p.FxRateToHkd, &p.CashRecievedHkd, &p.PaymentMode, &p.FirstMonthOfAccural, &p.MonthsOfAccural, &p.LastMonthOfAccural, &p.MonthlyRevenueAllocation, &p.CashReceivedForPaymentsToThirdParties, &p.TypeOfThirdParties, &p.NameOfThirdParty)
 }
 
 // PaymentsBySubscriptionID retrieves a row from 'ccdb_dupl.payment' as a Payment.
@@ -216,7 +209,7 @@ func PaymentsBySubscriptionID(db XODB, subscriptionID sql.NullInt64) ([]*Payment
 	return res, nil
 }
 
-func (p Payment) All(db XODB) (interface{}, error) {
+func (p *Payment) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query

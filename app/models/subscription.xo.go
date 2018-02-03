@@ -166,23 +166,29 @@ func (s *Subscription) Delete(db XODB) error {
 // Client returns the Client associated with the Subscription's ClientID (client_id).
 //
 // Generated from foreign key 'subscription_ibfk_1'.
-// func (s *Subscription) Client(db XODB) (*Client, error) {
-// 	return ClientByID(db, uint(s.ClientID.Int64))
-// }
+func (s *Subscription) Client(db XODB) (*Client, error) {
+	cl := &Client{}
+	err := cl.ByID(db, uint(s.ClientID.Int64))
+	return cl, err
+}
 
 // Package returns the Package associated with the Subscription's PackageID (package_id).
 //
 // Generated from foreign key 'subscription_ibfk_2'.
-// func (s *Subscription) Package(db XODB) (*Package, error) {
-// 	return PackageByID(db, s.PackageID)
-// }
+func (s *Subscription) Package(db XODB) (*Package, error) {
+	p := &Package{}
+	err := p.ByID(db, s.PackageID)
+	return p, err
+}
 
 // Partner returns the Partner associated with the Subscription's PartnerID (partner_id).
 //
 // Generated from foreign key 'subscription_ibfk_3'.
-// func (s *Subscription) Partner(db XODB) (*Partner, error) {
-// 	return PartnerByID(db, uint(s.PartnerID.Int64))
-// }
+func (s *Subscription) Partner(db XODB) (*Partner, error) {
+	p := &Partner{}
+	err := p.ByID(db, uint(s.PartnerID.Int64))
+	return p, err
+}
 
 // SubscriptionsByClientID retrieves a row from 'ccdb_dupl.subscription' as a Subscription.
 //
@@ -265,9 +271,7 @@ func SubscriptionsByPackageID(db XODB, packageID uint) ([]*Subscription, error) 
 // SubscriptionByID retrieves a row from 'ccdb_dupl.subscription' as a Subscription.
 //
 // Generated from index 'subscription__id_pkey'.
-func SubscriptionByID(db XODB, id uint) (*Subscription, error) {
-	var err error
-
+func (s *Subscription) ByID(db XODB, id uint) error {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`_id, client_id, package_id, partner_id, start_date, end_date, months_free, status, payment_terms, contract_status, contract_start_date, contract_end_date, monthly_payment, annual_payment, managed_account, change_of_plan_at_renewal, churn_rationale, months_to_churn, reconcillation, subscription_addon_price, service_paid_in_installments, setup_fee, net_service_price_INC, net_service_price_TR, net_service_price_others, discounts_on_subs_price, discounts_on_subs_addon, discounts_on_service_paid_in_installments, discounts_on_service_INC, discounts_on_service_TR, discounts_on_service_others, discounts_on_setup_fee, other_promotions_with_outlay, months_of_service, special_promotion, new_sales_commitment ` +
@@ -276,16 +280,9 @@ func SubscriptionByID(db XODB, id uint) (*Subscription, error) {
 
 	// run query
 	XOLog(sqlstr, id)
-	s := Subscription{
-		_exists: true,
-	}
+	s._exists = true
 
-	err = db.QueryRow(sqlstr, id).Scan(&s.ID, &s.ClientID, &s.PackageID, &s.PartnerID, &s.StartDate, &s.EndDate, &s.MonthsFree, &s.Status, &s.PaymentTerms, &s.ContractStatus, &s.ContractStartDate, &s.ContractEndDate, &s.MonthlyPayment, &s.AnnualPayment, &s.ManagedAccount, &s.ChangeOfPlanAtRenewal, &s.ChurnRationale, &s.MonthsToChurn, &s.Reconcillation, &s.SubscriptionAddonPrice, &s.ServicePaidInInstallments, &s.SetupFee, &s.NetServicePriceInc, &s.NetServicePriceTr, &s.NetServicePriceOthers, &s.DiscountsOnSubsPrice, &s.DiscountsOnSubsAddon, &s.DiscountsOnServicePaidInInstallments, &s.DiscountsOnServiceInc, &s.DiscountsOnServiceTr, &s.DiscountsOnServiceOthers, &s.DiscountsOnSetupFee, &s.OtherPromotionsWithOutlay, &s.MonthsOfService, &s.SpecialPromotion, &s.NewSalesCommitment)
-	if err != nil {
-		return nil, err
-	}
-
-	return &s, nil
+	return db.QueryRow(sqlstr, id).Scan(&s.ID, &s.ClientID, &s.PackageID, &s.PartnerID, &s.StartDate, &s.EndDate, &s.MonthsFree, &s.Status, &s.PaymentTerms, &s.ContractStatus, &s.ContractStartDate, &s.ContractEndDate, &s.MonthlyPayment, &s.AnnualPayment, &s.ManagedAccount, &s.ChangeOfPlanAtRenewal, &s.ChurnRationale, &s.MonthsToChurn, &s.Reconcillation, &s.SubscriptionAddonPrice, &s.ServicePaidInInstallments, &s.SetupFee, &s.NetServicePriceInc, &s.NetServicePriceTr, &s.NetServicePriceOthers, &s.DiscountsOnSubsPrice, &s.DiscountsOnSubsAddon, &s.DiscountsOnServicePaidInInstallments, &s.DiscountsOnServiceInc, &s.DiscountsOnServiceTr, &s.DiscountsOnServiceOthers, &s.DiscountsOnSetupFee, &s.OtherPromotionsWithOutlay, &s.MonthsOfService, &s.SpecialPromotion, &s.NewSalesCommitment)
 }
 
 // SubscriptionsByPartnerID retrieves a row from 'ccdb_dupl.subscription' as a Subscription.
@@ -327,7 +324,7 @@ func SubscriptionsByPartnerID(db XODB, partnerID sql.NullInt64) ([]*Subscription
 	return res, nil
 }
 
-func (s Subscription) All(db XODB) (interface{}, error) {
+func (s *Subscription) All(db XODB) (interface{}, error) {
 	var err error
 
 	// sql query
@@ -360,7 +357,4 @@ func (s Subscription) All(db XODB) (interface{}, error) {
 	}
 
 	return res, nil
-}
-func (s Subscription) ByID(db XODB, id uint) (interface{}, error) {
-	return nil, nil
 }
