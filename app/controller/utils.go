@@ -13,31 +13,45 @@ import (
 
 func allData(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	values, err := model.All(app.DB)
-	if err != nil {
-		data := Response{nil, "error"}
-		encode(w, data)
-		return err
-	}
 	data := Response{values, "success"}
-	encode(w, data)
-	return nil
+	encodeErr(w, data, err)
+	return err
 }
 func byID(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(val)
 	err := model.ByID(app.DB, uint(id))
-	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
-		return err
-	}
 
+	var d interface{}
+	switch model.(type) {
+	case *models.SalesPerson:
+		d = struct {
+			SalesPerson *models.SalesPerson `json:"salesperson"`
+		}{model.(*models.SalesPerson)}
+	case *models.Package:
+		d = struct {
+			Package *models.Package `json:"package"`
+		}{model.(*models.Package)}
+	case *models.Partner:
+		d = struct {
+			Partner *models.Partner `json:"partner"`
+		}{model.(*models.Partner)}
+	}
 	data := Response{
-		Data:    model,
+		Data:    d,
 		Message: "success",
 	}
-	encode(w, data)
-	return nil
+	encodeErr(w, data, err)
+	return err
+}
+
+func encodeErr(w http.ResponseWriter, res Response, err error) {
+	if err != nil {
+		res = Response{nil, err.Error()}
+	}
+	if er := json.NewEncoder(w).Encode(res); er != nil {
+		log.Println(er)
+	}
 }
 
 func encode(w http.ResponseWriter, res Response) {

@@ -44,11 +44,31 @@ func SalesPersons(w http.ResponseWriter, r *http.Request, app *service.AppServer
 	return allData(s, w, r, app)
 }
 
+func SalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := &models.SalesPerson{}
+	return byID(s, w, r, app)
+}
+
+func Package(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := &models.Package{}
+	return byID(s, w, r, app)
+}
+
+func Partner(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	s := &models.Partner{}
+	return byID(s, w, r, app)
+}
+
 func Client(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
-	id, _ := strconv.Atoi(val)
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		data := Response{nil, err.Error()}
+		encode(w, data)
+		return err
+	}
 	cl := &models.Client{}
-	err := cl.ByID(app.DB, uint(id))
+	err = cl.ByID(app.DB, uint(id))
 	if err != nil {
 		data := Response{nil, err.Error()}
 		encode(w, data)
@@ -74,9 +94,14 @@ func Client(w http.ResponseWriter, r *http.Request, app *service.AppServer) erro
 
 func Subscription(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
-	id, _ := strconv.Atoi(val)
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		data := Response{nil, err.Error()}
+		encode(w, data)
+		return err
+	}
 	s := &models.Subscription{}
-	err := s.ByID(app.DB, uint(id))
+	err = s.ByID(app.DB, uint(id))
 	if err != nil {
 		data := Response{nil, err.Error()}
 		encode(w, data)
@@ -124,6 +149,11 @@ func Payment(w http.ResponseWriter, r *http.Request, app *service.AppServer) err
 		return err
 	}
 	s, err := p.Subscription(app.DB)
+	if err != nil {
+		data := Response{nil, err.Error()}
+		encode(w, data)
+		return err
+	}
 	data := Response{
 		Data: struct {
 			Payment      *models.Payment      `json:"payment"`
@@ -133,18 +163,4 @@ func Payment(w http.ResponseWriter, r *http.Request, app *service.AppServer) err
 	}
 	encode(w, data)
 	return nil
-}
-func SalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	s := &models.SalesPerson{}
-	return byID(s, w, r, app)
-}
-
-func Package(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	s := &models.Package{}
-	return byID(s, w, r, app)
-}
-
-func Partner(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	s := &models.Partner{}
-	return byID(s, w, r, app)
 }
