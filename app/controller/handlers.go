@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"database/sql"
 	"net/http"
 	"strconv"
 
@@ -9,57 +10,52 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Response struct {
-	Data    interface{} `json:"data"`
-	Message string      `json:"message"`
-}
-
-func Clients(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetClients(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	cl := &models.Client{}
-	return allData(cl, w, r, app)
+	return allData(cl, w, app)
 }
 
-func Subscriptions(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetSubscriptions(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.Subscription{}
-	return allData(s, w, r, app)
+	return allData(s, w, app)
 }
 
-func Payments(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetPayments(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.Payment{}
-	return allData(s, w, r, app)
+	return allData(s, w, app)
 }
 
-func Partners(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetPartners(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.Partner{}
-	return allData(s, w, r, app)
+	return allData(s, w, app)
 }
 
-func Packages(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetPackages(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.Package{}
-	return allData(s, w, r, app)
+	return allData(s, w, app)
 }
 
-func SalesPersons(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetSalesPersons(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.SalesPerson{}
-	return allData(s, w, r, app)
+	return allData(s, w, app)
 }
 
-func SalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetSalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.SalesPerson{}
 	return byID(s, w, r, app)
 }
 
-func Package(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetPackage(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.Package{}
 	return byID(s, w, r, app)
 }
 
-func Partner(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetPartner(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	s := &models.Partner{}
 	return byID(s, w, r, app)
 }
 
-func Client(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetClient(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(val)
 	if err != nil {
@@ -75,7 +71,7 @@ func Client(w http.ResponseWriter, r *http.Request, app *service.AppServer) erro
 		return err
 	}
 	sp, err := cl.SalesPerson(app.DB)
-	if err != nil {
+	if err != sql.ErrNoRows && err != nil {
 		data := Response{nil, err.Error()}
 		encode(w, data)
 		return err
@@ -92,7 +88,7 @@ func Client(w http.ResponseWriter, r *http.Request, app *service.AppServer) erro
 	return nil
 }
 
-func Subscription(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetSubscription(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(val)
 	if err != nil {
@@ -120,7 +116,7 @@ func Subscription(w http.ResponseWriter, r *http.Request, app *service.AppServer
 		return err
 	}
 	part, err := s.Partner(app.DB)
-	if err != nil {
+	if err != sql.ErrNoRows && err != nil {
 		data := Response{nil, err.Error()}
 		encode(w, data)
 		return err
@@ -138,7 +134,7 @@ func Subscription(w http.ResponseWriter, r *http.Request, app *service.AppServer
 	return nil
 }
 
-func Payment(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+func GetPayment(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(val)
 	p := &models.Payment{}

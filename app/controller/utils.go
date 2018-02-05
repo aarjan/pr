@@ -11,12 +11,96 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func allData(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+type Response struct {
+	Data    interface{} `json:"data"`
+	Message string      `json:"message"`
+}
+
+func createModel(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	var err error
+	err = json.NewDecoder(r.Body).Decode(&model)
+	if err != nil {
+		res := Response{nil, err.Error()}
+		encode(w, res)
+		return err
+	}
+	switch m := model.(type) {
+	case *models.Client:
+		err = m.Insert(app.DB)
+		model = m
+
+	case *models.SalesPerson:
+		err = m.Insert(app.DB)
+		model = m
+
+	case *models.Partner:
+		err = m.Insert(app.DB)
+		model = m
+
+	case *models.Package:
+		err = m.Insert(app.DB)
+		model = m
+
+	case *models.Subscription:
+		err = m.Insert(app.DB)
+		model = m
+
+	case *models.Payment:
+		err = m.Insert(app.DB)
+		model = m
+	}
+	res := Response{model, "success"}
+	encodeErr(w, res, err)
+	return err
+}
+
+func deleteModel(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	var err error
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		data := Response{nil, err.Error()}
+		encode(w, data)
+		return err
+	}
+	switch m := model.(type) {
+	case *models.Client:
+		m.ID = uint(id)
+		err = m.Delete(app.DB)
+		model = m
+	case *models.SalesPerson:
+		m.ID = uint(id)
+		err = m.Delete(app.DB)
+		model = m
+	case *models.Partner:
+		m.ID = uint(id)
+		err = m.Delete(app.DB)
+		model = m
+	case *models.Package:
+		m.ID = uint(id)
+		err = m.Delete(app.DB)
+		model = m
+	case *models.Subscription:
+		m.ID = uint(id)
+		err = m.Delete(app.DB)
+		model = m
+	case *models.Payment:
+		m.ID = uint(id)
+		err = m.Delete(app.DB)
+		model = m
+	}
+	data := Response{model, "success"}
+	encodeErr(w, data, err)
+	return nil
+}
+
+func allData(model models.Modeler, w http.ResponseWriter, app *service.AppServer) error {
 	values, err := model.All(app.DB)
 	data := Response{values, "success"}
 	encodeErr(w, data, err)
 	return err
 }
+
 func byID(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	val := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(val)

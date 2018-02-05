@@ -17,7 +17,7 @@ func (app AppHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println("Route", r.URL.Path)
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Content-Type", "application/json")
 
 	err := app.HandlerFunc(w, r, app.AppServer)
 	if err != nil {
