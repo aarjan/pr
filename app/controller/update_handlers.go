@@ -10,6 +10,6 @@ import (
 
 func UpdateClient(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
 	var v interface{}
-	fmt.Println(json.NewDecoder(r.Body).Decode(v), v)
+	fmt.Println(json.NewDecoder(r.Body).Decode(&v), v)
 	return nil
 }

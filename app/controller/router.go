@@ -46,7 +46,7 @@ func Handler(app *service.AppServer) *mux.Router {
 	m.Handle("/payment", AppHandler{app, CreatePayment}).Methods("POST")
 
 	// Update
-	m.Handle("/client", AppHandler{app, CreateClient}).Methods("PUT")
-	
+	m.Handle("/client", AppHandler{app, UpdateClient}).Methods("PUT")
+
 	return m
 }
