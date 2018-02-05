@@ -7,28 +7,26 @@ import (
 	"database/sql"
 	"errors"
 	"time"
-
-	"github.com/go-sql-driver/mysql"
 )
 
 // Client represents a row from 'ccdb_dupl.client'.
 type Client struct {
 	ID                         uint               `json:"_id"`                            // _id
-	AppUUID                    sql.NullString     `json:"app_uuid"`                       // app_uuid
-	Name                       sql.NullString     `json:"name"`                           // name
-	Type                       sql.NullString     `json:"type"`                           // type
+	AppUUID                    NullString         `json:"app_uuid"`                       // app_uuid
+	Name                       NullString         `json:"name"`                           // name
+	Type                       NullString         `json:"type"`                           // type
 	LegalEntityBooking         LegalEntityBooking `json:"legal_entity_booking"`           // legal_entity_booking
 	NumberOfEmployees          NumberOfEmployee   `json:"number_of_employees"`            // number_of_employees
-	BusinessSince              sql.NullInt64      `json:"business_since"`                 // business_since
-	Segment                    sql.NullString     `json:"segment"`                        // segment
-	LeadSource                 sql.NullString     `json:"lead_source"`                    // lead_source
-	ReasonForAllocationToSales sql.NullString     `json:"reason_for_allocation_to_sales"` // reason_for_allocation_to_sales
-	ResponsibleRm              sql.NullString     `json:"responsible_RM"`                 // responsible_RM
-	AcquisitionDate            mysql.NullTime     `json:"acquisition_date"`               // acquisition_date
-	AcquisitionCohort          mysql.NullTime     `json:"acquisition_cohort"`             // acquisition_cohort
-	ClientChurnDate            mysql.NullTime     `json:"client_churn_date"`              // client_churn_date
+	BusinessSince              NullInt64          `json:"business_since"`                 // business_since
+	Segment                    NullString         `json:"segment"`                        // segment
+	LeadSource                 NullString         `json:"lead_source"`                    // lead_source
+	ReasonForAllocationToSales NullString         `json:"reason_for_allocation_to_sales"` // reason_for_allocation_to_sales
+	ResponsibleRm              NullString         `json:"responsible_RM"`                 // responsible_RM
+	AcquisitionDate            NullTime           `json:"acquisition_date"`               // acquisition_date
+	AcquisitionCohort          NullTime           `json:"acquisition_cohort"`             // acquisition_cohort
+	ClientChurnDate            NullTime           `json:"client_churn_date"`              // client_churn_date
 	Timestamp                  time.Time          `json:"timestamp"`                      // timestamp
-	SalesPersonID              sql.NullInt64      `json:"sales_person_id"`                // sales_person_id
+	SalesPersonID              NullInt64          `json:"sales_person_id"`                // sales_person_id
 
 	// xo fields
 	_exists, _deleted bool
@@ -118,15 +116,15 @@ func (c *Client) Save(db XODB) error {
 func (c *Client) Delete(db XODB) error {
 	var err error
 
-	// if doesn't exist, bail
-	if !c._exists {
-		return nil
-	}
+	// // if doesn't exist, bail
+	// if !c._exists {
+	// 	return nil
+	// }
 
-	// if deleted, bail
-	if c._deleted {
-		return nil
-	}
+	// // if deleted, bail
+	// if c._deleted {
+	// 	return nil
+	// }
 
 	// sql query
 	const sqlstr = `DELETE FROM ccdb_dupl.client WHERE _id = ?`

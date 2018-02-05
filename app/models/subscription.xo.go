@@ -6,48 +6,46 @@ package models
 import (
 	"database/sql"
 	"errors"
-
-	"github.com/go-sql-driver/mysql"
 )
 
 // Subscription represents a row from 'ccdb_dupl.subscription'.
 type Subscription struct {
-	ID                                   uint            `json:"_id"`                                       // _id
-	ClientID                             sql.NullInt64   `json:"client_id"`                                 // client_id
-	PackageID                            uint            `json:"package_id"`                                // package_id
-	PartnerID                            sql.NullInt64   `json:"partner_id"`                                // partner_id
-	StartDate                            mysql.NullTime  `json:"start_date"`                                // start_date
-	EndDate                              mysql.NullTime  `json:"end_date"`                                  // end_date
-	MonthsFree                           sql.NullInt64   `json:"months_free"`                               // months_free
-	Status                               sql.NullBool    `json:"status"`                                    // status
-	PaymentTerms                         PaymentTerm     `json:"payment_terms"`                             // payment_terms
-	ContractStatus                       ContractStatus  `json:"contract_status"`                           // contract_status
-	ContractStartDate                    mysql.NullTime  `json:"contract_start_date"`                       // contract_start_date
-	ContractEndDate                      mysql.NullTime  `json:"contract_end_date"`                         // contract_end_date
-	MonthlyPayment                       sql.NullFloat64 `json:"monthly_payment"`                           // monthly_payment
-	AnnualPayment                        sql.NullFloat64 `json:"annual_payment"`                            // annual_payment
-	ManagedAccount                       sql.NullBool    `json:"managed_account"`                           // managed_account
-	ChangeOfPlanAtRenewal                sql.NullString  `json:"change_of_plan_at_renewal"`                 // change_of_plan_at_renewal
-	ChurnRationale                       sql.NullString  `json:"churn_rationale"`                           // churn_rationale
-	MonthsToChurn                        sql.NullInt64   `json:"months_to_churn"`                           // months_to_churn
-	Reconcillation                       sql.NullString  `json:"reconcillation"`                            // reconcillation
-	SubscriptionAddonPrice               sql.NullFloat64 `json:"subscription_addon_price"`                  // subscription_addon_price
-	ServicePaidInInstallments            sql.NullString  `json:"service_paid_in_installments"`              // service_paid_in_installments
-	SetupFee                             sql.NullFloat64 `json:"setup_fee"`                                 // setup_fee
-	NetServicePriceInc                   sql.NullFloat64 `json:"net_service_price_INC"`                     // net_service_price_INC
-	NetServicePriceTr                    sql.NullFloat64 `json:"net_service_price_TR"`                      // net_service_price_TR
-	NetServicePriceOthers                sql.NullFloat64 `json:"net_service_price_others"`                  // net_service_price_others
-	DiscountsOnSubsPrice                 sql.NullFloat64 `json:"discounts_on_subs_price"`                   // discounts_on_subs_price
-	DiscountsOnSubsAddon                 sql.NullFloat64 `json:"discounts_on_subs_addon"`                   // discounts_on_subs_addon
-	DiscountsOnServicePaidInInstallments sql.NullFloat64 `json:"discounts_on_service_paid_in_installments"` // discounts_on_service_paid_in_installments
-	DiscountsOnServiceInc                sql.NullFloat64 `json:"discounts_on_service_INC"`                  // discounts_on_service_INC
-	DiscountsOnServiceTr                 sql.NullFloat64 `json:"discounts_on_service_TR"`                   // discounts_on_service_TR
-	DiscountsOnServiceOthers             sql.NullFloat64 `json:"discounts_on_service_others"`               // discounts_on_service_others
-	DiscountsOnSetupFee                  sql.NullFloat64 `json:"discounts_on_setup_fee"`                    // discounts_on_setup_fee
-	OtherPromotionsWithOutlay            sql.NullString  `json:"other_promotions_with_outlay"`              // other_promotions_with_outlay
-	MonthsOfService                      sql.NullInt64   `json:"months_of_service"`                         // months_of_service
-	SpecialPromotion                     sql.NullString  `json:"special_promotion"`                         // special_promotion
-	NewSalesCommitment                   sql.NullInt64   `json:"new_sales_commitment"`                      // new_sales_commitment
+	ID                                   uint           `json:"_id"`                                       // _id
+	ClientID                             NullInt64      `json:"client_id"`                                 // client_id
+	PackageID                            uint           `json:"package_id"`                                // package_id
+	PartnerID                            NullInt64      `json:"partner_id"`                                // partner_id
+	StartDate                            NullTime       `json:"start_date"`                                // start_date
+	EndDate                              NullTime       `json:"end_date"`                                  // end_date
+	MonthsFree                           NullInt64      `json:"months_free"`                               // months_free
+	Status                               NullBool       `json:"status"`                                    // status
+	PaymentTerms                         PaymentTerm    `json:"payment_terms"`                             // payment_terms
+	ContractStatus                       ContractStatus `json:"contract_status"`                           // contract_status
+	ContractStartDate                    NullTime       `json:"contract_start_date"`                       // contract_start_date
+	ContractEndDate                      NullTime       `json:"contract_end_date"`                         // contract_end_date
+	MonthlyPayment                       NullFloat64    `json:"monthly_payment"`                           // monthly_payment
+	AnnualPayment                        NullFloat64    `json:"annual_payment"`                            // annual_payment
+	ManagedAccount                       NullBool       `json:"managed_account"`                           // managed_account
+	ChangeOfPlanAtRenewal                NullString     `json:"change_of_plan_at_renewal"`                 // change_of_plan_at_renewal
+	ChurnRationale                       NullString     `json:"churn_rationale"`                           // churn_rationale
+	MonthsToChurn                        NullInt64      `json:"months_to_churn"`                           // months_to_churn
+	Reconcillation                       NullString     `json:"reconcillation"`                            // reconcillation
+	SubscriptionAddonPrice               NullFloat64    `json:"subscription_addon_price"`                  // subscription_addon_price
+	ServicePaidInInstallments            NullString     `json:"service_paid_in_installments"`              // service_paid_in_installments
+	SetupFee                             NullFloat64    `json:"setup_fee"`                                 // setup_fee
+	NetServicePriceInc                   NullFloat64    `json:"net_service_price_INC"`                     // net_service_price_INC
+	NetServicePriceTr                    NullFloat64    `json:"net_service_price_TR"`                      // net_service_price_TR
+	NetServicePriceOthers                NullFloat64    `json:"net_service_price_others"`                  // net_service_price_others
+	DiscountsOnSubsPrice                 NullFloat64    `json:"discounts_on_subs_price"`                   // discounts_on_subs_price
+	DiscountsOnSubsAddon                 NullFloat64    `json:"discounts_on_subs_addon"`                   // discounts_on_subs_addon
+	DiscountsOnServicePaidInInstallments NullFloat64    `json:"discounts_on_service_paid_in_installments"` // discounts_on_service_paid_in_installments
+	DiscountsOnServiceInc                NullFloat64    `json:"discounts_on_service_INC"`                  // discounts_on_service_INC
+	DiscountsOnServiceTr                 NullFloat64    `json:"discounts_on_service_TR"`                   // discounts_on_service_TR
+	DiscountsOnServiceOthers             NullFloat64    `json:"discounts_on_service_others"`               // discounts_on_service_others
+	DiscountsOnSetupFee                  NullFloat64    `json:"discounts_on_setup_fee"`                    // discounts_on_setup_fee
+	OtherPromotionsWithOutlay            NullString     `json:"other_promotions_with_outlay"`              // other_promotions_with_outlay
+	MonthsOfService                      NullInt64      `json:"months_of_service"`                         // months_of_service
+	SpecialPromotion                     NullString     `json:"special_promotion"`                         // special_promotion
+	NewSalesCommitment                   NullInt64      `json:"new_sales_commitment"`                      // new_sales_commitment
 
 	// xo fields
 	_exists, _deleted bool
@@ -138,14 +136,14 @@ func (s *Subscription) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !s._exists {
-		return nil
-	}
+	// if !s._exists {
+	// 	return nil
+	// }
 
-	// if deleted, bail
-	if s._deleted {
-		return nil
-	}
+	// // if deleted, bail
+	// if s._deleted {
+	// 	return nil
+	// }
 
 	// sql query
 	const sqlstr = `DELETE FROM ccdb_dupl.subscription WHERE _id = ?`

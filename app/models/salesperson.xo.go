@@ -6,14 +6,15 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 )
 
 // SalesPerson represents a row from 'ccdb_dupl.sales_person'.
 type SalesPerson struct {
 	ID          uint           `json:"_id"`         // _id
-	Name        sql.NullString `json:"name"`        // name
-	Team        sql.NullString `json:"team"`        // team
-	Designation sql.NullString `json:"designation"` // designation
+	Name        NullString `json:"name"`        // name
+	Team        NullString `json:"team"`        // team
+	Designation NullString `json:"designation"` // designation
 
 	// xo fields
 	_exists, _deleted bool
@@ -104,14 +105,14 @@ func (sp *SalesPerson) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !sp._exists {
-		return nil
-	}
+	// if !sp._exists {
+	// 	return nil
+	// }
 
-	// if deleted, bail
-	if sp._deleted {
-		return nil
-	}
+	// // if deleted, bail
+	// if sp._deleted {
+	// 	return nil
+	// }
 
 	// sql query
 	const sqlstr = `DELETE FROM ccdb_dupl.sales_person WHERE _id = ?`
@@ -125,7 +126,7 @@ func (sp *SalesPerson) Delete(db XODB) error {
 
 	// set deleted
 	sp._deleted = true
-
+	fmt.Println(sp)
 	return nil
 }
 

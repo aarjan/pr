@@ -6,29 +6,27 @@ package models
 import (
 	"database/sql"
 	"errors"
-
-	"github.com/go-sql-driver/mysql"
 )
 
 // Payment represents a row from 'ccdb_dupl.payment'.
 type Payment struct {
 	ID                                    uint                `json:"_id"`                                         // _id
-	SubscriptionID                        sql.NullInt64       `json:"subscription_id"`                             // subscription_id
-	TransactionDate                       mysql.NullTime      `json:"transaction_date"`                            // transaction_date
+	SubscriptionID                        NullInt64           `json:"subscription_id"`                             // subscription_id
+	TransactionDate                       NullTime            `json:"transaction_date"`                            // transaction_date
 	NatureOfTransaction                   NatureOfTransaction `json:"nature_of_transaction"`                       // nature_of_transaction
 	ContractStatus                        ContractStatus      `json:"contract_status"`                             // contract_status
-	CashRecieved                          sql.NullString      `json:"cash_recieved"`                               // cash_recieved
+	CashRecieved                          NullString          `json:"cash_recieved"`                               // cash_recieved
 	Currency                              string              `json:"currency"`                                    // currency
 	FxRateToHkd                           float32             `json:"fx_rate_to_HKD"`                              // fx_rate_to_HKD
-	CashRecievedHkd                       sql.NullFloat64     `json:"cash_recieved_HKD"`                           // cash_recieved_HKD
+	CashRecievedHkd                       NullFloat64         `json:"cash_recieved_HKD"`                           // cash_recieved_HKD
 	PaymentMode                           PaymentMode         `json:"payment_mode"`                                // payment_mode
-	FirstMonthOfAccural                   mysql.NullTime      `json:"first_month_of_accural"`                      // first_month_of_accural
-	MonthsOfAccural                       sql.NullInt64       `json:"months_of_accural"`                           // months_of_accural
-	LastMonthOfAccural                    mysql.NullTime      `json:"last_month_of_accural"`                       // last_month_of_accural
-	MonthlyRevenueAllocation              sql.NullFloat64     `json:"monthly_revenue_allocation"`                  // monthly_revenue_allocation
-	CashReceivedForPaymentsToThirdParties sql.NullFloat64     `json:"cash_received_for_payments_to_third_parties"` // cash_received_for_payments_to_third_parties
-	TypeOfThirdParties                    sql.NullString      `json:"type_of_third_parties"`                       // type_of_third_parties
-	NameOfThirdParty                      sql.NullString      `json:"name_of_third_party"`                         // name_of_third_party
+	FirstMonthOfAccural                   NullTime            `json:"first_month_of_accural"`                      // first_month_of_accural
+	MonthsOfAccural                       NullInt64           `json:"months_of_accural"`                           // months_of_accural
+	LastMonthOfAccural                    NullTime            `json:"last_month_of_accural"`                       // last_month_of_accural
+	MonthlyRevenueAllocation              NullFloat64         `json:"monthly_revenue_allocation"`                  // monthly_revenue_allocation
+	CashReceivedForPaymentsToThirdParties NullFloat64         `json:"cash_received_for_payments_to_third_parties"` // cash_received_for_payments_to_third_parties
+	TypeOfThirdParties                    NullString          `json:"type_of_third_parties"`                       // type_of_third_parties
+	NameOfThirdParty                      NullString          `json:"name_of_third_party"`                         // name_of_third_party
 
 	// xo fields
 	_exists, _deleted bool
@@ -119,14 +117,14 @@ func (p *Payment) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !p._exists {
-		return nil
-	}
+	// if !p._exists {
+	// 	return nil
+	// }
 
-	// if deleted, bail
-	if p._deleted {
-		return nil
-	}
+	// // if deleted, bail
+	// if p._deleted {
+	// 	return nil
+	// }
 
 	// sql query
 	const sqlstr = `DELETE FROM ccdb_dupl.payment WHERE _id = ?`
