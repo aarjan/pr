@@ -12,7 +12,7 @@ import (
 
 var (
 	db         *sql.DB
-	dbName     = flag.String("db_name", "ccdb_dev", "Database name; Must have an existing ccdb_dev database!!")
+	dbName     = flag.String("db_name", "db2", "Database name; Must have an existing ccdb_dev database!!")
 	dbUser     = flag.String("db_user", "root", "Name of user to use during test")
 	dbPassword = flag.String("db_pass", "root", "Password for user")
 )

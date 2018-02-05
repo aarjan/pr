@@ -21,41 +21,36 @@ type NullTime mysql.NullTime
 func (v NullInt64) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.Int64)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (v NullFloat64) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.Float64)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (v NullBool) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.Bool)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (v NullString) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.String)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (v NullTime) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.Time)
-	} else {
-		return json.Marshal(nil)
 	}
+	return json.Marshal(nil)
 }
 
 func (v *NullInt64) UnmarshalJSON(data []byte) error {
