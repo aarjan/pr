@@ -47,6 +47,11 @@ func Handler(app *service.AppServer) *mux.Router {
 
 	// Update
 	m.Handle("/client", AppHandler{app, UpdateClient}).Methods("PUT")
+	m.Handle("/salesperson", AppHandler{app, UpdateSalesPerson}).Methods("PUT")
+	m.Handle("/partner", AppHandler{app, UpdatePartner}).Methods("PUT")
+	m.Handle("/package", AppHandler{app, UpdatePackage}).Methods("PUT")
+	m.Handle("/subscription", AppHandler{app, UpdateSubscription}).Methods("PUT")
+	m.Handle("/payment", AppHandler{app, UpdatePayment}).Methods("PUT")
 
 	return m
 }

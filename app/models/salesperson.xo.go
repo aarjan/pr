@@ -70,14 +70,14 @@ func (sp *SalesPerson) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !sp._exists {
-		return errors.New("update failed: does not exist")
-	}
+	// if !sp._exists {
+	// 	return errors.New("update failed: does not exist")
+	// }
 
-	// if deleted, bail
-	if sp._deleted {
-		return errors.New("update failed: marked for deletion")
-	}
+	// // if deleted, bail
+	// if sp._deleted {
+	// 	return errors.New("update failed: marked for deletion")
+	// }
 
 	// sql query
 	const sqlstr = `UPDATE ccdb_dupl.sales_person SET ` +

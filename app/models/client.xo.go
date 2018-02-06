@@ -83,14 +83,14 @@ func (c *Client) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !c._exists {
-		return errors.New("update failed: does not exist")
-	}
+	// if !c._exists {
+	// 	return errors.New("update failed: does not exist")
+	// }
 
-	// if deleted, bail
-	if c._deleted {
-		return errors.New("update failed: marked for deletion")
-	}
+	// // if deleted, bail
+	// if c._deleted {
+	// 	return errors.New("update failed: marked for deletion")
+	// }
 
 	// sql query
 	const sqlstr = `UPDATE ccdb_dupl.client SET ` +

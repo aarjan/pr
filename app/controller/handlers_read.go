@@ -59,21 +59,18 @@ func GetClient(w http.ResponseWriter, r *http.Request, app *service.AppServer) e
 	val := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(val)
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	cl := &models.Client{}
 	err = cl.ByID(app.DB, uint(id))
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	sp, err := cl.SalesPerson(app.DB)
 	if err != sql.ErrNoRows && err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 
@@ -84,7 +81,7 @@ func GetClient(w http.ResponseWriter, r *http.Request, app *service.AppServer) e
 		}{cl, sp},
 		Message: "success",
 	}
-	encode(w, data)
+	encodeErr(w, data, err)
 	return nil
 }
 
@@ -92,33 +89,28 @@ func GetSubscription(w http.ResponseWriter, r *http.Request, app *service.AppSer
 	val := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(val)
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	s := &models.Subscription{}
 	err = s.ByID(app.DB, uint(id))
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	cl, err := s.Client(app.DB)
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	pack, err := s.Package(app.DB)
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	part, err := s.Partner(app.DB)
 	if err != sql.ErrNoRows && err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	data := Response{
@@ -130,7 +122,7 @@ func GetSubscription(w http.ResponseWriter, r *http.Request, app *service.AppSer
 		}{s, cl, pack, part},
 		Message: "success",
 	}
-	encode(w, data)
+	encodeErr(w, data, err)
 	return nil
 }
 
@@ -140,14 +132,12 @@ func GetPayment(w http.ResponseWriter, r *http.Request, app *service.AppServer) 
 	p := &models.Payment{}
 	err := p.ByID(app.DB, uint(id))
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	s, err := p.Subscription(app.DB)
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	data := Response{
@@ -157,6 +147,6 @@ func GetPayment(w http.ResponseWriter, r *http.Request, app *service.AppServer) 
 		}{p, s},
 		Message: "success",
 	}
-	encode(w, data)
+	encodeErr(w, data, err)
 	return nil
 }

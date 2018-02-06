@@ -102,14 +102,14 @@ func (s *Subscription) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !s._exists {
-		return errors.New("update failed: does not exist")
-	}
+	// if !s._exists {
+	// 	return errors.New("update failed: does not exist")
+	// }
 
-	// if deleted, bail
-	if s._deleted {
-		return errors.New("update failed: marked for deletion")
-	}
+	// // if deleted, bail
+	// if s._deleted {
+	// 	return errors.New("update failed: marked for deletion")
+	// }
 
 	// sql query
 	const sqlstr = `UPDATE ccdb_dupl.subscription SET ` +

@@ -20,8 +20,7 @@ func createModel(model models.Modeler, w http.ResponseWriter, r *http.Request, a
 	var err error
 	err = json.NewDecoder(r.Body).Decode(&model)
 	if err != nil {
-		res := Response{nil, err.Error()}
-		encode(w, res)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	switch m := model.(type) {
@@ -49,7 +48,7 @@ func createModel(model models.Modeler, w http.ResponseWriter, r *http.Request, a
 		err = m.Insert(app.DB)
 		model = m
 	}
-	res := Response{model, "success"}
+	res := Response{model, "create success"}
 	encodeErr(w, res, err)
 	return err
 }
@@ -59,8 +58,7 @@ func deleteModel(model models.Modeler, w http.ResponseWriter, r *http.Request, a
 	val := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(val)
 	if err != nil {
-		data := Response{nil, err.Error()}
-		encode(w, data)
+		encodeErr(w, Response{}, err)
 		return err
 	}
 	switch m := model.(type) {
@@ -89,7 +87,7 @@ func deleteModel(model models.Modeler, w http.ResponseWriter, r *http.Request, a
 		err = m.Delete(app.DB)
 		model = m
 	}
-	data := Response{model, "success"}
+	data := Response{model, "delete success"}
 	encodeErr(w, data, err)
 	return nil
 }
@@ -133,12 +131,6 @@ func encodeErr(w http.ResponseWriter, res Response, err error) {
 	if err != nil {
 		res = Response{nil, err.Error()}
 	}
-	if er := json.NewEncoder(w).Encode(res); er != nil {
-		log.Println(er)
-	}
-}
-
-func encode(w http.ResponseWriter, res Response) {
 	if er := json.NewEncoder(w).Encode(res); er != nil {
 		log.Println(er)
 	}
