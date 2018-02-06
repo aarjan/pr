@@ -81,7 +81,7 @@ func GetClient(w http.ResponseWriter, r *http.Request, app *service.AppServer) e
 		}{cl, sp},
 		Message: "success",
 	}
-	encodeErr(w, data, err)
+	encodeErr(w, data, nil)
 	return nil
 }
 
@@ -122,7 +122,7 @@ func GetSubscription(w http.ResponseWriter, r *http.Request, app *service.AppSer
 		}{s, cl, pack, part},
 		Message: "success",
 	}
-	encodeErr(w, data, err)
+	encodeErr(w, data, nil)
 	return nil
 }
 
@@ -147,6 +147,6 @@ func GetPayment(w http.ResponseWriter, r *http.Request, app *service.AppServer) 
 		}{p, s},
 		Message: "success",
 	}
-	encodeErr(w, data, err)
+	encodeErr(w, data, nil)
 	return nil
 }

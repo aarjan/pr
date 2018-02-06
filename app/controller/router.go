@@ -14,8 +14,10 @@ func Handler(app *service.AppServer) *mux.Router {
 		fmt.Fprint(w, "Welcome to home directory")
 	})
 
+	m.Handle("/login", AppHandler{app, Login}).Methods("POST")
+
 	// GET
-	m.Handle("/clients", AppHandler{app, GetClients}).Methods("GET")
+	m.Handle("/clients", AuthMiddleware(AppHandler{app, GetClients})).Methods("GET")
 	m.Handle("/subscriptions", AppHandler{app, GetSubscriptions}).Methods("GET")
 	m.Handle("/payments", AppHandler{app, GetPayments}).Methods("GET")
 	m.Handle("/salespersons", AppHandler{app, GetSalesPersons}).Methods("GET")
@@ -46,12 +48,12 @@ func Handler(app *service.AppServer) *mux.Router {
 	m.Handle("/payment", AppHandler{app, CreatePayment}).Methods("POST")
 
 	// Update
-	m.Handle("/client", AppHandler{app, UpdateClient}).Methods("PUT")
-	m.Handle("/salesperson", AppHandler{app, UpdateSalesPerson}).Methods("PUT")
-	m.Handle("/partner", AppHandler{app, UpdatePartner}).Methods("PUT")
-	m.Handle("/package", AppHandler{app, UpdatePackage}).Methods("PUT")
-	m.Handle("/subscription", AppHandler{app, UpdateSubscription}).Methods("PUT")
-	m.Handle("/payment", AppHandler{app, UpdatePayment}).Methods("PUT")
+	m.Handle("/client/{id}", AppHandler{app, UpdateClient}).Methods("PUT")
+	m.Handle("/salesperson/{id}", AppHandler{app, UpdateSalesPerson}).Methods("PUT")
+	m.Handle("/partner/{id}", AppHandler{app, UpdatePartner}).Methods("PUT")
+	m.Handle("/package/{id}", AppHandler{app, UpdatePackage}).Methods("PUT")
+	m.Handle("/subscription/{id}", AppHandler{app, UpdateSubscription}).Methods("PUT")
+	m.Handle("/payment/{id}", AppHandler{app, UpdatePayment}).Methods("PUT")
 
 	return m
 }

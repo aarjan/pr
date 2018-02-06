@@ -16,45 +16,44 @@ type Response struct {
 	Message string      `json:"message"`
 }
 
-func createModel(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	var err error
-	err = json.NewDecoder(r.Body).Decode(&model)
+func updateModel(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
 	if err != nil {
 		encodeErr(w, Response{}, err)
 		return err
 	}
 	switch m := model.(type) {
 	case *models.Client:
-		err = m.Insert(app.DB)
+		m.ID = uint(id)
+		err = m.Update(app.DB)
 		model = m
-
 	case *models.SalesPerson:
-		err = m.Insert(app.DB)
+		m.ID = uint(id)
+		err = m.Update(app.DB)
 		model = m
-
 	case *models.Partner:
-		err = m.Insert(app.DB)
+		m.ID = uint(id)
+		err = m.Update(app.DB)
 		model = m
-
 	case *models.Package:
-		err = m.Insert(app.DB)
+		m.ID = uint(id)
+		err = m.Update(app.DB)
 		model = m
-
 	case *models.Subscription:
-		err = m.Insert(app.DB)
+		m.ID = uint(id)
+		err = m.Update(app.DB)
 		model = m
-
 	case *models.Payment:
-		err = m.Insert(app.DB)
+		m.ID = uint(id)
+		err = m.Update(app.DB)
 		model = m
 	}
-	res := Response{model, "create success"}
-	encodeErr(w, res, err)
-	return err
+	data := Response{model, "update success"}
+	encodeErr(w, data, err)
+	return nil
 }
-
 func deleteModel(model models.Modeler, w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	var err error
 	val := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(val)
 	if err != nil {

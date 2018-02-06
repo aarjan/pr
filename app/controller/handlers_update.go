@@ -3,13 +3,21 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/ccdb-api/app/models"
 	"github.com/ccdb-api/app/service"
+	"github.com/gorilla/mux"
 )
 
-func UpdateClient(w http.ResponseWriter, r *http.Request, app *service.AppServer) (err error) {
-	c := &models.Client{}
+func UpdateClient(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		encodeErr(w, Response{}, err)
+		return err
+	}
+	c := &models.Client{ID: uint(id)}
 	err = json.NewDecoder(r.Body).Decode(c)
 	if err != nil {
 		encodeErr(w, Response{}, err)
@@ -21,8 +29,14 @@ func UpdateClient(w http.ResponseWriter, r *http.Request, app *service.AppServer
 	return err
 }
 
-func UpdateSalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppServer) (err error) {
-	c := &models.SalesPerson{}
+func UpdateSalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		encodeErr(w, Response{}, err)
+		return err
+	}
+	c := &models.SalesPerson{ID: uint(id)}
 	err = json.NewDecoder(r.Body).Decode(c)
 	if err != nil {
 		encodeErr(w, Response{}, err)
@@ -33,8 +47,14 @@ func UpdateSalesPerson(w http.ResponseWriter, r *http.Request, app *service.AppS
 	encodeErr(w, res, err)
 	return err
 }
-func UpdatePackage(w http.ResponseWriter, r *http.Request, app *service.AppServer) (err error) {
-	c := &models.Package{}
+func UpdatePackage(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		encodeErr(w, Response{}, err)
+		return err
+	}
+	c := &models.Package{ID: uint(id)}
 	err = json.NewDecoder(r.Body).Decode(c)
 	if err != nil {
 		encodeErr(w, Response{}, err)
@@ -45,8 +65,14 @@ func UpdatePackage(w http.ResponseWriter, r *http.Request, app *service.AppServe
 	encodeErr(w, res, err)
 	return err
 }
-func UpdatePartner(w http.ResponseWriter, r *http.Request, app *service.AppServer) (err error) {
-	c := &models.Partner{}
+func UpdatePartner(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		encodeErr(w, Response{}, err)
+		return err
+	}
+	c := &models.Partner{ID: uint(id)}
 	err = json.NewDecoder(r.Body).Decode(c)
 	if err != nil {
 		encodeErr(w, Response{}, err)
@@ -57,8 +83,14 @@ func UpdatePartner(w http.ResponseWriter, r *http.Request, app *service.AppServe
 	encodeErr(w, res, err)
 	return err
 }
-func UpdateSubscription(w http.ResponseWriter, r *http.Request, app *service.AppServer) (err error) {
-	c := &models.Subscription{}
+func UpdateSubscription(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		encodeErr(w, Response{}, err)
+		return err
+	}
+	c := &models.Subscription{ID: uint(id)}
 	err = json.NewDecoder(r.Body).Decode(c)
 	if err != nil {
 		encodeErr(w, Response{}, err)
@@ -69,8 +101,14 @@ func UpdateSubscription(w http.ResponseWriter, r *http.Request, app *service.App
 	encodeErr(w, res, err)
 	return err
 }
-func UpdatePayment(w http.ResponseWriter, r *http.Request, app *service.AppServer) (err error) {
-	c := &models.Payment{}
+func UpdatePayment(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
+	val := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(val)
+	if err != nil {
+		encodeErr(w, Response{}, err)
+		return err
+	}
+	c := &models.Payment{ID: uint(id)}
 	err = json.NewDecoder(r.Body).Decode(c)
 	if err != nil {
 		encodeErr(w, Response{}, err)
