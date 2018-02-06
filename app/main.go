@@ -25,7 +25,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	app := &service.AppServer{db}
+	app := &service.AppServer{DB: db}
 	http.ListenAndServe(":8080", h.Handler(app))
 }
