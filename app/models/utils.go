@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"database/sql/driver"
 	"encoding/json"
 	"reflect"
 
@@ -14,10 +15,6 @@ type Modeler interface {
 }
 
 type NullInt64 sql.NullInt64
-type NullString sql.NullString
-type NullBool sql.NullBool
-type NullFloat64 sql.NullFloat64
-type NullTime mysql.NullTime
 
 // Scan implements the Scanner interface for NullInt64
 func (ni *NullInt64) Scan(value interface{}) error {
@@ -34,6 +31,31 @@ func (ni *NullInt64) Scan(value interface{}) error {
 	}
 	return nil
 }
+
+// Value implements the driver Valuer interface.
+func (ni NullInt64) Value() (driver.Value, error) {
+	if !ni.Valid {
+		return nil, nil
+	}
+	return ni.Int64, nil
+}
+
+// MarshalJSON implements Marshler interface
+func (ni NullInt64) MarshalJSON() ([]byte, error) {
+	if ni.Valid {
+		return json.Marshal(ni.Int64)
+	}
+	return json.Marshal(nil)
+}
+
+// UnmarshalJSON implements UnMarshler interface
+func (ni *NullInt64) UnmarshalJSON(data []byte) error {
+	err := json.Unmarshal(data, &ni.Int64)
+	ni.Valid = (err == nil)
+	return err
+}
+
+type NullBool sql.NullBool
 
 // Scan implements the Scanner interface for NullBool
 func (nb *NullBool) Scan(value interface{}) error {
@@ -52,6 +74,29 @@ func (nb *NullBool) Scan(value interface{}) error {
 	return nil
 }
 
+// Value implements the driver Valuer interface.
+func (nb NullBool) Value() (driver.Value, error) {
+	if !nb.Valid {
+		return nil, nil
+	}
+	return nb.Bool, nil
+}
+
+func (nb NullBool) MarshalJSON() ([]byte, error) {
+	if nb.Valid {
+		return json.Marshal(nb.Bool)
+	}
+	return json.Marshal(nil)
+}
+
+func (nb *NullBool) UnmarshalJSON(data []byte) error {
+	err := json.Unmarshal(data, &nb.Bool)
+	nb.Valid = (err == nil)
+	return err
+}
+
+type NullFloat64 sql.NullFloat64
+
 // Scan implements the Scanner interface for NullFloat64
 func (nf *NullFloat64) Scan(value interface{}) error {
 	var f sql.NullFloat64
@@ -69,6 +114,29 @@ func (nf *NullFloat64) Scan(value interface{}) error {
 	return nil
 }
 
+// Value implements the driver Valuer interface.
+func (nf NullFloat64) Value() (driver.Value, error) {
+	if !nf.Valid {
+		return nil, nil
+	}
+	return nf.Float64, nil
+}
+
+func (nf NullFloat64) MarshalJSON() ([]byte, error) {
+	if nf.Valid {
+		return json.Marshal(nf.Float64)
+	}
+	return json.Marshal(nil)
+}
+
+func (nf *NullFloat64) UnmarshalJSON(data []byte) error {
+	err := json.Unmarshal(data, &nf.Float64)
+	nf.Valid = (err == nil)
+	return err
+}
+
+type NullString sql.NullString
+
 // Scan implements the Scanner interface for NullString
 func (ns *NullString) Scan(value interface{}) error {
 	var s sql.NullString
@@ -82,9 +150,31 @@ func (ns *NullString) Scan(value interface{}) error {
 	} else {
 		*ns = NullString{s.String, true}
 	}
-
 	return nil
 }
+
+// Value implements the driver Valuer interface.
+func (ns NullString) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return ns.String, nil
+}
+
+func (ns NullString) MarshalJSON() ([]byte, error) {
+	if ns.Valid {
+		return json.Marshal(ns.String)
+	}
+	return json.Marshal(nil)
+}
+
+func (ns *NullString) UnmarshalJSON(data []byte) error {
+	err := json.Unmarshal(data, &ns.String)
+	ns.Valid = (err == nil)
+	return err
+}
+
+type NullTime mysql.NullTime
 
 // Scan implements the Scanner interface for NullTime
 func (nt *NullTime) Scan(value interface{}) error {
@@ -103,68 +193,23 @@ func (nt *NullTime) Scan(value interface{}) error {
 	return nil
 }
 
-// MarshalJSON implements Marshler interface
-func (v NullInt64) MarshalJSON() ([]byte, error) {
-	if v.Valid {
-		return json.Marshal(v.Int64)
+// Value implements the driver Valuer interface.
+func (nt NullTime) Value() (driver.Value, error) {
+	if !nt.Valid {
+		return nil, nil
+	}
+	return nt.Time, nil
+}
+
+func (nt NullTime) MarshalJSON() ([]byte, error) {
+	if nt.Valid {
+		return json.Marshal(nt.Time)
 	}
 	return json.Marshal(nil)
 }
 
-func (v NullFloat64) MarshalJSON() ([]byte, error) {
-	if v.Valid {
-		return json.Marshal(v.Float64)
-	}
-	return json.Marshal(nil)
-}
-
-func (v NullBool) MarshalJSON() ([]byte, error) {
-	if v.Valid {
-		return json.Marshal(v.Bool)
-	}
-	return json.Marshal(nil)
-}
-
-func (v NullString) MarshalJSON() ([]byte, error) {
-	if v.Valid {
-		return json.Marshal(v.String)
-	}
-	return json.Marshal(nil)
-}
-
-func (v NullTime) MarshalJSON() ([]byte, error) {
-	if v.Valid {
-		return json.Marshal(v.Time)
-	}
-	return json.Marshal(nil)
-}
-
-func (v *NullInt64) UnmarshalJSON(data []byte) error {
-	err := json.Unmarshal(data, &v.Int64)
-	v.Valid = (err == nil)
-	return err
-}
-
-func (v *NullFloat64) UnmarshalJSON(data []byte) error {
-	err := json.Unmarshal(data, &v.Float64)
-	v.Valid = (err == nil)
-	return err
-}
-
-func (v *NullBool) UnmarshalJSON(data []byte) error {
-	err := json.Unmarshal(data, &v.Bool)
-	v.Valid = (err == nil)
-	return err
-}
-
-func (v *NullString) UnmarshalJSON(data []byte) error {
-	err := json.Unmarshal(data, &v.String)
-	v.Valid = (err == nil)
-	return err
-}
-
-func (v *NullTime) UnmarshalJSON(data []byte) error {
-	err := json.Unmarshal(data, &v.Time)
-	v.Valid = (err == nil)
+func (nt *NullTime) UnmarshalJSON(data []byte) error {
+	err := json.Unmarshal(data, &nt.Time)
+	nt.Valid = (err == nil)
 	return err
 }
