@@ -1,36 +1,63 @@
 package controller
 
 import (
-	"errors"
+	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/aarjan/blog/app/shared"
 	"github.com/ccdb-api/app/models"
 	"github.com/ccdb-api/app/service"
+	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func Login(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-	r.ParseForm()
-	name := r.FormValue("username")
-	pass := r.FormValue("password")
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusNoContent)
+		return nil
+	}
+	req := struct {
+		Dash     bool   `json:"dash"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}{}
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return err
+	}
+	name := req.Email
+	pass := req.Password
 
 	// user verification
 	user, err := models.VerifyUser(name, pass, app.DB)
-	res := Response{user, "success"}
-	encodeErr(w, res, err)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return err
+	}
+	user.LastSeen = time.Now()
+	user.Update(app.DB)
+	w.Header().Set("X-Dragon-Law-Dragonball", user.AccessToken.String)
+	w.Header().Set("X-Dragon-Law-Username", user.Username)
+	res := Response{nil, "success"}
+	encodeErr(w, res, nil)
 	return err
 }
 
 func Register(w http.ResponseWriter, r *http.Request, app *service.AppServer) error {
-
-	r.ParseForm()
-	name := r.FormValue("username")
-	pass := r.FormValue("password")
+	m := make(map[string]string)
+	err := json.NewDecoder(r.Body).Decode(&m)
+	if err != nil {
+		encodeErr(w, Response{}, err)
+		return errors.Wrap(err, "encoding error")
+	}
+	name := m["email"]
+	pass := m["password"]
 
 	// verify username
 	user, err := models.UserByUsername(app.DB, name)
-	if user.ID != 0 {
+	if user != nil {
 		err := errors.New("Username already exists")
 		encodeErr(w, Response{}, err)
 		return err
@@ -39,12 +66,19 @@ func Register(w http.ResponseWriter, r *http.Request, app *service.AppServer) er
 	accessToken := shared.GenerateAccessToken(name)
 	password, _ := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
 
-	user.AccessToken = models.NullString{string(accessToken), true}
-	user.Password = string(password)
+	user = &models.User{
+		Username:    name,
+		Password:    string(password),
+		AccessToken: models.NullString{string(accessToken), true},
+		LoginTime:   time.Now(),
+		LastSeen:    time.Now(),
+	}
 
 	// save record to database
 	err = user.Insert(app.DB)
-	res := Response{user, "success"}
+	w.Header().Set("X-Dragon-Law-Dragonball", user.AccessToken.String)
+	w.Header().Set("X-Dragon-Law-Username", user.Username)
+	res := Response{nil, "success"}
 	encodeErr(w, res, err)
 	return err
 }
